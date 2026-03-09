@@ -36,14 +36,14 @@ class Router {
             "login" => ["GET", "POST"]
         ];
         
-        if(!in_array(array_keys($ALLOWED_ACTIONS), $action)){
+        if(!in_array( $action, array_keys($ALLOWED_ACTIONS))){
             ; // err 404
         }
         
-        if(!in_array($ALLOWED_ACTIONS[$action], $this->method)){
+        if(!in_array( $this->method, $ALLOWED_ACTIONS[$action])){
             ; // err 405 method not allowed
         }
-        
+        $action = "user_" . $action;
         $this->$action();
     }
     
