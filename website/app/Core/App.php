@@ -10,8 +10,9 @@ namespace Core;
  */
 class App {
     private array $url;
+    private string $method;
     
-    public function __construct(): void
+    public function __construct(private Router $router): void
     {
         ;
     }
@@ -27,5 +28,17 @@ class App {
         $this->url = explode('/', $url);
     }
     
-    
+    private function SetMethod(): void
+    {
+        if($this->url[0] === ''){
+            $this->method = "home";
+        }
+        
+        if (!method_exists($this->router, $this->url[0])){
+            ; // err 404
+        }
+        
+        $this->method = $this->url[0];
+        unset($this->url[0]);
+    }
 }
