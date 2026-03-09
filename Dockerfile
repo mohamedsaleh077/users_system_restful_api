@@ -1,5 +1,6 @@
 FROM 8ct8pus/apache-php-fpm-alpine:2.5.2
 
+RUN apk add composer
 WORKDIR /sites/localhost/html/public
 
 #COPY docker/etc/ /docker/etc/
@@ -7,12 +8,11 @@ WORKDIR /sites/localhost/html/public
 RUN chown -R apache:apache /sites/localhost || true
 
 # composer commands
+COPY ./website/* .
 WORKDIR /sites/localhost/html/public/app
-COPY ./website/* /sites/localhost/html/public/
 
-RUN apk add composer
+COPY ./website/app/composer.json .
 RUN composer install
-RUN composer update
 RUN composer dump-autoload
 
 EXPOSE 80 443
