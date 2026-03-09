@@ -17,7 +17,7 @@ trait Errors{
         die();
     }
     
-    public function Reject() :void
+    public function RejectMethod() :void
     {
         http_response_code(405);
         header("Content-Type: application/json; charset=utf-8");
