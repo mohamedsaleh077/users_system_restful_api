@@ -18,17 +18,21 @@ class UserModel {
         $this->sql = new QueryBuilder(new MySQL_Driver("/app/config.ini"));
     }
     
-    public function get($username, $email): array
+    public function get(string $username, string $email): array
     {
         return $this->sql->select("users", ["username"])
                 ->where([["username", "=", "username"], "OR", ["email", "=", "email"]])
                 ->callDB(["username" => $username, "email" => $email]);
     }
     
-    public function add($username, $email, $password_hash): array
+    public function add(string $username, string  $email, string $password_hash): array
     {
         return $this->sql->insert("users", ["username", "email", "password_hash"])
-                ->values([$username, $email, $password_hash]);
-                
+                ->values(["username", "email", "password_hash"])
+                ->callDB([
+                    "username" => $username,
+                    "email" => $email,
+                    "password_hash" => $password_hash
+                        ]);
     }
 }
