@@ -6,7 +6,7 @@
 CREATE TABLE IF NOT EXISTS users
 (
     id INT AUTO_INCREMENT,
-    `name` VARCHAR(100) NOT NULL,
+    `name` VARCHAR(100),
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
