@@ -1,0 +1,22 @@
+{
+  "config": {
+    "platform": {
+      "php": "8.3.0"
+    }
+  },
+  "require":{
+        "mohamedsaleh077/lno": "dev-main",
+        "vlucas/phpdotenv": "5.6.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Core\\": "Core/",
+      "Controllers\\": "Controllers/",
+      "Models\\": "Models/",
+      "Interfaces\\": "Interfaces/",
+      "Abstracts\\": "Abstracts/",
+      "Traits\\": "Traits/",
+      "Unites\\": "Units/"
+    }
+  }
+}
