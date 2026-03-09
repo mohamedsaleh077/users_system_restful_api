@@ -3,8 +3,6 @@
 declare(strict_types=1);
 namespace Core;
 
-use function ucfirst;
-
 /**
  * Description of App
  *  Parse the URL and feed the Router with the information from the request
