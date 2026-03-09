@@ -34,6 +34,22 @@ class UserSignup extends User
       $this->CheckParams();
       $this->ValidateInput();
       $this->CheckExistance();
+
+      $saveResult = $this->model->add(
+              $this->post["username"], 
+              $this->post["email"],
+              $this->HashingPassword($this->post["password"])
+              );
+      
+      if(!$saveResult["ok"]){
+          $this->results["errors"] = "Error While Creating the account, contanct the admin";
+          $this->checkValidationErrors();
+      }
+      
+      $this->results["ok"] = 1;
+      // setting up the token
+      $this->results["jwt_token"] = [];
+      $this->Success();
    }
    
    public function CheckMethod():void
@@ -44,7 +60,8 @@ class UserSignup extends User
    }
    
    public function CheckParams(){
-       if(!(isset($this->post["username"]) && isset($this->post["password"]) 
+       if(!(isset($this->post["username"]) 
+            && isset($this->post["password"]) 
             && isset($this->post["email"]) )){
            $this->MissingParams();
        }
@@ -52,20 +69,35 @@ class UserSignup extends User
    
    public function ValidateInput(): void
    {
-       $this->ValidateUsernameInput($post["username"]);
-       $this->ValidateEmailInput($post["email"]);
-       $this->ValidatePasswordInput($post["password"]);
+       $this->ValidateUsernameInput($this->post["username"]);
+       $this->ValidateEmailInput($this->post["email"]);
+       $this->ValidatePasswordInput($this->post["password"]);
        
        $this->checkValidationErrors();
    }
    
    public function CheckExistance(): void
    {
-       $dbResult = $this->model->get($post["username"], $post["email"]);
+       $dbResult = $this->model->get($this->post["username"], $this->post["email"]);
        if(!empty($dbResult["results"])){
            $this->results["errors"][] = "This Username/Email is used before.";
        }
         $this->checkValidationErrors();
+   }
+   
+   private function HashingPassword(string $password): string
+   {
+       $options = [
+            'cost' => 12
+        ];
+        return password_hash($password, PASSWORD_DEFAULT, $options);
+   }
+   
+   private function Success(){
+       http_response_code(200);
+        header("Content-Type: application/json; charset=utf-8");
+        echo json_encode($this->results);
+        die();
    }
 
 }
