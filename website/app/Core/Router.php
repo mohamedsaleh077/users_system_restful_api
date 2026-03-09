@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Core;
 use Core\View;
+use Traits\Errors;
+
 
 /**
  * Description of Router
@@ -12,18 +14,19 @@ use Core\View;
  * @author mohamed
  */
 class Router {
-    
     private string $method;
     private object $viewer;
+    
+    use Errors;
     
     public function __construct() {
         $this->method = $_SERVER["REQUEST_METHOD"];
         $this->viewer = new View();
-    }
+    }   
     
     public function home(){
         $routes = [
-            "GET /users"
+            "GET /users/ -"
         ];
         $this->viewer::RoutesView("Home", $routes);
     }
@@ -37,11 +40,11 @@ class Router {
         ];
         
         if(!in_array( $action, array_keys($ALLOWED_ACTIONS))){
-            ; // err 404
+            $this->PageNotFound();
         }
         
         if(!in_array( $this->method, $ALLOWED_ACTIONS[$action])){
-            ; // err 405 method not allowed
+            $this->RejectMethod();
         }
         $action = "user_" . $action;
         $this->$action();
@@ -50,10 +53,22 @@ class Router {
     private function user_index():void
     {
         $routes = [
-            "GET/POST : /user/signu",
+            "GET/POST : /user/signup",
             "GET/POST : /user/login"
         ];
         $this->viewer::RoutesView("Users", $routes);
+    }
+    
+    private function user_signup() {
+        if($this->method === "GET"){
+            $routes = [
+              "POST : /user/signup {username:50 password:50 email:255}"  
+            ];
+            $this->viewer::RoutesView("User Sign up", $routes);
+        }
+        if($this->method === "POST"){
+            call_user_func_array([(new \Controllers\UserSignup()), "create"], []);
+        }
     }
     
 }
