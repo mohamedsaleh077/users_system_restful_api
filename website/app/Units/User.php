@@ -23,7 +23,7 @@ class User {
         ];
     }
 
-    protected function ValidateUsernameInput($username): void
+    protected function ValidateUsernameInput(string $username): void
     {
         if(strlen($username) > 50){
             $this->results["errors"][] = "Username excuted the max length 50char";
@@ -36,7 +36,7 @@ class User {
         }
     }
     
-    protected function ValidateEmailInput($email): void
+    protected function ValidateEmailInput(string $email): void
     {
         if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
             $this->results["errors"][] = "Invalid Email";
@@ -45,7 +45,7 @@ class User {
             $this->results["errors"][] = "Email is longer than 255";
         }
     }
-    protected function ValidatePasswordInput($password): void
+    protected function ValidatePasswordInput(string $password): void
     {
         if(strlen($password) > 50){
             $this->results["errors"][] = "Password excuted the max length 50char";
