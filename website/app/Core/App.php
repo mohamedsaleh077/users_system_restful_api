@@ -1,7 +1,8 @@
 <?php
-
 declare(strict_types=1);
 namespace Core;
+
+use Traits\Errors;
 
 /**
  * Description of App
@@ -13,7 +14,9 @@ class App {
     private string $method;
     private array $params;
     
-    public function __construct(private Router $router): void
+    use Errors;
+    
+    public function __construct(private Router $router)
     {
         $this->ParseUrl();
 
@@ -23,7 +26,7 @@ class App {
         $this->SetParams();
 
         if(!is_callable([$router, $this->method])) {
-           ; // err 404
+           $this->PageNotFound();
         }
 
         call_user_func_array([($this->router), $this->method], $this->params);
@@ -44,10 +47,11 @@ class App {
     {
         if($this->url[0] === ''){
             $this->method = "home";
+            return;
         }
         
         if (!method_exists($this->router, $this->url[0])){
-            ; // err 404
+            $this->PageNotFound();
         }
         
         $this->method = $this->url[0];
