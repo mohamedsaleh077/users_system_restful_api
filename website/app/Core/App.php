@@ -11,6 +11,7 @@ namespace Core;
 class App {
     private array $url;
     private string $method;
+    private array $params;
     
     public function __construct(private Router $router): void
     {
@@ -40,5 +41,10 @@ class App {
         
         $this->method = $this->url[0];
         unset($this->url[0]);
+    }
+    
+    private function SetParams(): void
+    {
+        $this->params = isset($this->url[1]) ? array_values($this->url) : [];
     }
 }
