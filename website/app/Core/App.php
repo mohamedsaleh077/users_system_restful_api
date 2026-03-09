@@ -3,6 +3,8 @@
 declare(strict_types=1);
 namespace Core;
 
+use function ucfirst;
+
 /**
  * Description of App
  *  Parse the URL and feed the Router with the information from the request
@@ -15,7 +17,18 @@ class App {
     
     public function __construct(private Router $router): void
     {
-        ;
+        $this->ParseUrl();
+
+        $this->url[0] = ucfirst(strtolower($this->url[0] ?? ''));
+
+        $this->SetMethod();
+        $this->SetParams();
+
+        if(!is_callable([$router, $this->method])) {
+           ; // err 404
+        }
+
+        call_user_func_array([($this->router), $this->method], $this->params);
     }
     
     private function ParseURL(): void
