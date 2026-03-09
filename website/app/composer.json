@@ -16,7 +16,7 @@
       "Interfaces\\": "Interfaces/",
       "Abstracts\\": "Abstracts/",
       "Traits\\": "Traits/",
-      "Unites\\": "Units/"
+      "Units\\": "Units/"
     }
   }
 }

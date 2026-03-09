@@ -15,7 +15,7 @@ class ComposerStaticInit2e98e6721d9bf01113925dd6d57a0ec6
     public static $prefixLengthsPsr4 = array (
         'U' =>
         array (
-            'Unites\\' => 7,
+            'Units\\' => 6,
         ),
         'T' =>
         array (
@@ -60,7 +60,7 @@ class ComposerStaticInit2e98e6721d9bf01113925dd6d57a0ec6
     );
 
     public static $prefixDirsPsr4 = array (
-        'Unites\\' =>
+        'Units\\' =>
         array (
             0 => __DIR__ . '/../..' . '/Units',
         ),
