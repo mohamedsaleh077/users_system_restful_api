@@ -52,14 +52,14 @@ class UserSignup extends User
       $this->Success();
    }
    
-   public function CheckMethod():void
+   private function CheckMethod():void
    {
        if(!$this->isPOST()){
            $this->RejectMethod();
        }
    }
    
-   public function CheckParams(){
+   private function CheckParams(){
        if(!(isset($this->post["username"]) 
             && isset($this->post["password"]) 
             && isset($this->post["email"]) )){
@@ -67,7 +67,7 @@ class UserSignup extends User
        }
    }
    
-   public function ValidateInput(): void
+   private function ValidateInput(): void
    {
        $this->ValidateUsernameInput($this->post["username"]);
        $this->ValidateEmailInput($this->post["email"]);
@@ -76,7 +76,7 @@ class UserSignup extends User
        $this->checkValidationErrors();
    }
    
-   public function CheckExistance(): void
+   private function CheckExistance(): void
    {
        $dbResult = $this->model->get($this->post["username"], $this->post["email"]);
        if(!empty($dbResult["results"])){
