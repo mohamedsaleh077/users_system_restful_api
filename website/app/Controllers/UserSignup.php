@@ -108,6 +108,15 @@ class UserSignup extends User
    
    private function Success(): void
    {
+        $cookie_options = [
+            'expires' => time() + 3600,
+            'domain' => "",
+            'path' => '/',
+            'secure' => false,
+            'httponly' => true,
+            'samesite'=> 'Lax'
+        ];
+       setcookie("Token", $this->results["jwt_token"] , $cookie_options);
        http_response_code(200);
        header("Content-Type: application/json; charset=utf-8");
        echo json_encode($this->results);
@@ -121,7 +130,7 @@ class UserSignup extends User
            "id" => $this->results["saving_results"]["lastID"],
            "username" => $this->post["username"],
            "email" =>  $this->post["email"],
-           "created_at" => date() . "-" . time() 
+           "created_at" => time() 
        ];
        
        $jwt = new JWT();
