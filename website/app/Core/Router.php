@@ -16,12 +16,14 @@ use Traits\Errors;
 class Router {
     private string $method;
     private object $viewer;
+    private string $content;
     
     use Errors;
     
     public function __construct() {
         $this->method = $_SERVER["REQUEST_METHOD"];
         $this->viewer = new View();
+//        $this->content = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
     }   
     
     public function home(){
@@ -66,6 +68,9 @@ class Router {
             ];
             $this->viewer::RoutesView("User Sign up", $routes);
         }
+//        if ($this->content !== 'application/json'){
+//            $this->UnsupportedContent();
+//        }
         if($this->method === "POST"){
             call_user_func_array([(new \Controllers\UserSignup()), "create"], []);
         }
