@@ -13,7 +13,7 @@ trait Errors{
     {
         http_response_code(404);
         header("Content-Type: application/json; charset=utf-8");
-        echo json_encode(["ok" => 0, "error" => "Page Not Found."]);
+        echo json_encode(["ok" => 0, "message" => "Page Not Found."]);
         die();
     }
     
@@ -21,7 +21,7 @@ trait Errors{
     {
         http_response_code(405);
         header("Content-Type: application/json; charset=utf-8");
-        echo json_encode(["ok" => 0, "error" => "This method is not Allowed"]);
+        echo json_encode(["ok" => 0, "message" => "This method is not Allowed"]);
         die();
     }
     
@@ -29,7 +29,7 @@ trait Errors{
     {
         http_response_code(400);
         header("Content-Type: application/json; charset=utf-8");
-        echo json_encode(["ok" => 0, "error" => "Missing Params."]);
+        echo json_encode(["ok" => 0, "message" => "Missing Params."]);
         die();
     }
     
@@ -39,9 +39,15 @@ trait Errors{
         header("Content-Type: application/json; charset=utf-8");
         echo json_encode([
                             "ok" => 0, 
-                            "error" => "invalide inputs",
+                            "message" => "invalide inputs",
                             "errors" => $details
                         ]);
+        die();
+    }
+    
+    public function UnsupportedContent(){
+        http_response_code(415);
+        echo json_encode(["message" => "Only JSON content is supported"]);
         die();
     }
 }
