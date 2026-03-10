@@ -1,4 +1,7 @@
 <?php
+
+namespace Interfaces;
+
 /**
  *
  * @author mohamed
