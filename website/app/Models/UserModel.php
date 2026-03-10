@@ -20,7 +20,7 @@ class UserModel {
     
     public function get(string $username, string $email): array
     {
-        return $this->sql->select("users", ["username"])
+        return $this->sql->select("users", ["username", "email"])
                 ->where([["username", "=", "username"], "OR", ["email", "=", "email"]])
                 ->callDB(["username" => $username, "email" => $email]);
     }
