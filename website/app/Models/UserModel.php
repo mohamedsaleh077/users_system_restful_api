@@ -12,7 +12,7 @@ use Interfaces\iModel;
  * @author mohamed
  */
 class UserModel 
-implements iModel
+//implements iModel
 {
     private object $sql;
     
