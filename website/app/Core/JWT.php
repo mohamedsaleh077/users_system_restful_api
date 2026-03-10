@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace Core;
+use Traits\Errors;
 
 /**
  * Description of JWT
@@ -16,6 +17,11 @@ class JWT {
     private function Base64URLEncode(string $text): string
     {
         return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($text));
+    }
+    
+    private function base64URLDecode(string $text): string
+    {
+        return base64_decode(str_replace(["-", "_"], ["+", "/"], $text));
     }
     
     public function Encode(array $payload): string
@@ -36,4 +42,28 @@ class JWT {
     }
     
     
+     public function decode(string $token): array
+    {
+        $match = "/^(?<header>.+)\.(?<payload>.+)\.(?<signature>.+)$/";
+        if (preg_match($match, $token, $matches) !== 1) {
+            $this->Unauthorized();
+        }
+
+        $signature = hash_hmac(
+                "sha256",
+                $matches["header"] . "." . $matches["payload"],
+                $this->key,
+                true
+        );
+
+        $signature_from_token = $this->base64URLDecode($matches["signature"]);
+
+        if (!hash_equals($signature, $signature_from_token)) {
+            $this->Unauthorized();
+        }
+
+        $payload = json_decode($this->base64URLDecode($matches["payload"]), true);
+
+        return $payload;
+    }
 }
