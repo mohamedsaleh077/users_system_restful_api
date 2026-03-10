@@ -6,6 +6,7 @@ use Units\User;
 use Traits\Errors;
 use Traits\APIHelper;
 use Models\UserModel;
+use Core\JWT;
 
 /**
  * For Sign up api
@@ -35,20 +36,11 @@ class UserSignup extends User
       $this->ValidateInput();
       $this->CheckExistance();
 
-      $saveResult = $this->model->add(
-              $this->post["username"], 
-              $this->post["email"],
-              $this->HashingPassword($this->post["password"])
-              );
-      
-      if(!$saveResult["ok"]){
-          $this->results["errors"] = "Error While Creating the account, contanct the admin";
-          $this->checkValidationErrors();
-      }
+      $this->results["saving_results"] = $this->SaveToDatabase();
       
       $this->results["ok"] = 1;
       // setting up the token
-      $this->results["jwt_token"] = [];
+      $this->results["jwt_token"] = $this->TokenGenerate();
       $this->Success();
    }
    
@@ -98,11 +90,41 @@ class UserSignup extends User
         return password_hash($password, PASSWORD_DEFAULT, $options);
    }
    
-   private function Success(){
-       http_response_code(200);
-        header("Content-Type: application/json; charset=utf-8");
-        echo json_encode($this->results);
-        die();
+   private function SaveToDatabase(): array
+   {
+       $saveResult = $this->model->add(
+              $this->post["username"], 
+              $this->post["email"],
+              $this->HashingPassword($this->post["password"])
+              );
+      
+      if(!$saveResult["ok"]){
+          $this->results["errors"] = "Error While Creating the account, contanct the admin";
+          $this->checkValidationErrors();
+      }
+      
+      return $saveResult;
    }
+   
+   private function Success(): void
+   {
+       http_response_code(200);
+       header("Content-Type: application/json; charset=utf-8");
+       echo json_encode($this->results);
+       die();
+   }
+   
 
+   private function TokenGenerate(): string
+   {
+       $payload = [
+           "id" => $this->results["saving_results"]["lastID"],
+           "username" => $this->post["username"],
+           "email" =>  $this->post["email"],
+       ];
+       
+       $jwt = new JWT();
+       
+       return $jwt->Encode($payload);
+   }
 }
