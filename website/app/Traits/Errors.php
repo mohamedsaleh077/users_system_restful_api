@@ -45,9 +45,17 @@ trait Errors{
         die();
     }
     
-    public function UnsupportedContent(){
+    public function UnsupportedContent(): void
+    {
         http_response_code(415);
-        echo json_encode(["message" => "Only JSON content is supported"]);
+        echo json_encode(["ok"=>0, "message" => "Only JSON content is supported"]);
+        die();
+    }
+    
+    public function Unauthorized(): void
+    {
+        http_response_code(401);
+        echo json_encode(["ok"=>0, "message" => "Invalid Token"]);
         die();
     }
 }
