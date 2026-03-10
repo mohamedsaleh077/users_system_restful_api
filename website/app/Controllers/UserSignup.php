@@ -121,6 +121,7 @@ class UserSignup extends User
            "id" => $this->results["saving_results"]["lastID"],
            "username" => $this->post["username"],
            "email" =>  $this->post["email"],
+           "created_at" => date() . "-" . time() 
        ];
        
        $jwt = new JWT();
