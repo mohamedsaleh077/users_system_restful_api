@@ -80,7 +80,12 @@ class UserSignup extends User
    {
        $dbResult = $this->model->get($this->post["username"], $this->post["email"]);
        if(!empty($dbResult["results"])){
-           $this->results["errors"][] = "This Username/Email is used before.";
+           if($dbResult["results"]["username"] === $this->post["username"]){
+                $this->results["errors"][] = "This Username is used before.";
+           }
+            if($dbResult["results"]["email"] === $this->post["email"]){
+                $this->results["errors"][] = "This Email is used before.";
+            }
        }
         $this->checkValidationErrors();
    }
