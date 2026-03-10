@@ -4,13 +4,16 @@ declare(strict_types=1);
 namespace Models;
 use Mohamedsaleh077\Lno\QueryBuilder;
 use Mohamedsaleh077\Lno\MySQL_Driver;
+use Interfaces\iModel;
 
 /**
  * Description of UserModel
  *
  * @author mohamed
  */
-class UserModel {
+class UserModel 
+implements iModel
+{
     private object $sql;
     
     public function __construct()
