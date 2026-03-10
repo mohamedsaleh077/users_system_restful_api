@@ -31,7 +31,7 @@
         'mohamedsaleh077/lno' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '6a18851427a4f37a60a1acf8d61423bd089ffc03',
+            'reference' => '2a360530785db3e419646bb0af9235a1da108587',
             'type' => 'library',
             'install_path' => __DIR__ . '/../mohamedsaleh077/lno',
             'aliases' => array(

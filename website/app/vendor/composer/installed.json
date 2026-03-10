@@ -72,15 +72,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/mohamedsaleh077/lno.git",
-                "reference": "6a18851427a4f37a60a1acf8d61423bd089ffc03"
+                "reference": "2a360530785db3e419646bb0af9235a1da108587"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mohamedsaleh077/lno/zipball/6a18851427a4f37a60a1acf8d61423bd089ffc03",
-                "reference": "6a18851427a4f37a60a1acf8d61423bd089ffc03",
+                "url": "https://api.github.com/repos/mohamedsaleh077/lno/zipball/2a360530785db3e419646bb0af9235a1da108587",
+                "reference": "2a360530785db3e419646bb0af9235a1da108587",
                 "shasum": ""
             },
-            "time": "2026-03-09T21:32:59+00:00",
+            "time": "2026-03-10T20:43:44+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
