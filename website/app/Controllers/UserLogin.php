@@ -1,13 +1,7 @@
 <?php
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/PHPClass.php to edit this template
- */
-
 namespace Controllers;
 
-use Core\JWT;
 use Models\UserModel;
 use Units\User;
 
@@ -51,7 +45,14 @@ class UserLogin extends User
         
         $this->results["ok"] = 1;
         
-        $this->results["jwt_token"] = $this->TokenGenerate();
+        $payload = [
+           "id" => $this->userData["results"]["id"],
+           "username" => $this->userData["results"]["username"],
+           "email" =>  $this->userData["results"]["email"],
+           "created_at" => time() 
+       ];
+        
+        $this->results["jwt_token"] = $this->TokenGenerate($payload);
         $this->Success();
     }
     
@@ -91,35 +92,5 @@ class UserLogin extends User
        
        $this->checkValidationErrors();
    }
-   
-   private function TokenGenerate(): string
-   {
-       $payload = [
-           "id" => $this->userData["results"]["id"],
-           "username" => $this->userData["results"]["username"],
-           "email" =>  $this->userData["results"]["email"],
-           "created_at" => time() 
-       ];
-       
-       $jwt = new JWT();
-       
-       return $jwt->Encode($payload);
-   }
-   
-   private function Success(): void
-   {
-        $cookie_options = [
-            'expires' => time() + 3600,
-            'domain' => "",
-            'path' => '/',
-            'secure' => false,
-            'httponly' => true,
-            'samesite'=> 'Lax'
-        ];
-       setcookie("Token", $this->results["jwt_token"] , $cookie_options);
-       http_response_code(200);
-       header("Content-Type: application/json; charset=utf-8");
-       echo json_encode($this->results);
-       die();
-   }
+
 }
