@@ -14,6 +14,8 @@ class JWT {
     const KEY1 = "3f85ae090171d3c4d170fd65caaa13eed8b8d325bdb30a285f2fc945c5146a4f";
     const KEY2 = "30944830c305a65676c67929d440d893a8401b6dedd35f626d6c961c3e604d39";
     
+    use Errors;
+    
     private function Base64URLEncode(string $text): string
     {
         return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($text));
@@ -42,7 +44,7 @@ class JWT {
     }
     
     
-     public function decode(string $token): array
+    public function Decode(string $token): array
     {
         $match = "/^(?<header>.+)\.(?<payload>.+)\.(?<signature>.+)$/";
         if (preg_match($match, $token, $matches) !== 1) {
