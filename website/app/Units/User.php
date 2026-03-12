@@ -3,10 +3,6 @@ declare(strict_types=1);
 
 namespace Units;
 
-use const FILTER_VALIDATE_EMAIL;
-use function filter_var;
-use function strlen;
-
 /**
  * 
  * The Parent of all users
@@ -26,32 +22,37 @@ class User {
     protected function ValidateUsernameInput(string $username): void
     {
         if(strlen($username) > 50){
-            $this->results["errors"][] = "Username excuted the max length 50char";
+            $this->results["errors"]["username"][] = "Username excuted the max length 50char";
         }
         if(strlen($username) < 3){
-            $this->results["errors"][] = "Username can't be less than 3 char";
+            $this->results["errors"]["username"][] = "Username can't be less than 3 char";
         }
         if(preg_match("#[^a-zA-Z0-9/._-]#", $username)){
-            $this->results["errors"][] = "username must be a-zA-Z._-";
+            $this->results["errors"]["username"][] = "username must be a-zA-Z._-";
         }
     }
     
     protected function ValidateEmailInput(string $email): void
     {
-        if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-            $this->results["errors"][] = "Invalid Email";
+       $pattern = '/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
+       
+        if(!preg_match($pattern, $email)){
+            $this->results["errors"]["email"][] = "Invalid Email";
         }
         if(strlen($email) > 255){
-            $this->results["errors"][] = "Email is longer than 255";
+            $this->results["errors"]["email"][] = "Email is longer than 255";
+        }
+        if(strlen($email) < 8){
+            $this->results["errors"]["email"][] = "Email is too shorter than 8 chars";
         }
     }
     protected function ValidatePasswordInput(string $password): void
     {
         if(strlen($password) > 50){
-            $this->results["errors"][] = "Password excuted the max length 50char";
+            $this->results["errors"]["password"][] = "Password excuted the max length 50char";
         }
         if(strlen($password) < 6){
-            $this->results["errors"][] = "Password can't be less than 6 chars.";
+            $this->results["errors"]["password"][] = "Password can't be less than 6 chars.";
         }
     }
 
