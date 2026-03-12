@@ -32,6 +32,10 @@ class UserLogin extends User
     }
     
     public function Login(){
+        if($this->GetLogin()["ok"]){
+            header("Location: /user/isloggedin");
+        }
+        
         $this->CheckParams();
         $this->ValidateInput();
         $this->CheckExistance();
