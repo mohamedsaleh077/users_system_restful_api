@@ -38,7 +38,8 @@ class Router {
         $ALLOWED_ACTIONS = [
             "index" => ["GET"],
             "signup" => ["GET", "POST"],
-            "login" => ["GET", "POST"]
+            "login" => ["GET", "POST"],
+            "isloggedin" => ["GET", "POST"]
         ];
         
         if(!in_array( $action, array_keys($ALLOWED_ACTIONS))){
@@ -56,7 +57,8 @@ class Router {
     {
         $routes = [
             "GET/POST : /user/signup",
-            "GET/POST : /user/login"
+            "GET/POST : /user/login",
+            "GET/POST : /user/isloggedin"
         ];
         $this->viewer::RoutesView("Users", $routes);
     }
@@ -87,6 +89,19 @@ class Router {
         
         if($this->method === "POST"){
             call_user_func_array([(new \Controllers\UserLogin()), "Login"], []);
+        }
+    }
+    
+    private function user_isloggedin() {
+        if($this->method === "GET"){
+            $routes = [
+              "POST : /user/isloggedin {Token in the headers: 'Authorization': 'Bearer 1234567890abcdefghijklmnopqrstuvwkyz'}"  
+            ];
+            $this->viewer::RoutesView("User login", $routes);
+        }
+        
+        if($this->method === "POST"){
+            call_user_func_array([(new \Controllers\UserIsLoggedIn()), "Check"], []);
         }
     }
 }
