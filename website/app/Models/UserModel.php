@@ -28,6 +28,12 @@ class UserModel
                 ->callDB(["username" => $username, "email" => $email]);
     }
     
+    public function getAll(string $username, string $email){
+         return $this->sql->select("users")
+                ->where([["username", "=", "username"], "OR", ["email", "=", "email"]])
+                ->callDB(["username" => $username, "email" => $email]);
+    }
+    
     public function add(string $username, string  $email, string $password_hash): array
     {
         return $this->sql->insert("users", ["username", "email", "password_hash"])
