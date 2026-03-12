@@ -38,9 +38,16 @@ class UserSignup extends User
 
       $this->results["saving_results"] = $this->SaveToDatabase();
       
+      $payload = [
+           "id" => $this->results["saving_results"]["lastID"],
+           "username" => $this->post["username"],
+           "email" =>  $this->post["email"],
+           "created_at" => time() 
+       ];
+      
       $this->results["ok"] = 1;
       // setting up the token
-      $this->results["jwt_token"] = $this->TokenGenerate();
+      $this->results["jwt_token"] = $this->TokenGenerate($payload);
       $this->Success();
    }
    
@@ -106,34 +113,4 @@ class UserSignup extends User
       return $saveResult;
    }
    
-      private function TokenGenerate(): string
-   {
-       $payload = [
-           "id" => $this->results["saving_results"]["lastID"],
-           "username" => $this->post["username"],
-           "email" =>  $this->post["email"],
-           "created_at" => time() 
-       ];
-       
-       $jwt = new JWT();
-       
-       return $jwt->Encode($payload);
-   }
-   
-   private function Success(): void
-   {
-        $cookie_options = [
-            'expires' => time() + 3600,
-            'domain' => "",
-            'path' => '/',
-            'secure' => false,
-            'httponly' => true,
-            'samesite'=> 'Lax'
-        ];
-       setcookie("Token", $this->results["jwt_token"] , $cookie_options);
-       http_response_code(200);
-       header("Content-Type: application/json; charset=utf-8");
-       echo json_encode($this->results);
-       die();
-   }
 }
