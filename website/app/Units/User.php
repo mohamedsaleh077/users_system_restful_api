@@ -136,4 +136,11 @@ class User {
         }
         return '';
     }
+    
+    protected function LoginRespond(){
+        $login["login"] = $this->GetLogin(); 
+        header("Content-Type: application/json; charset=utf-8");
+        echo json_encode($login);
+        die();
+    }
 }
