@@ -2,7 +2,8 @@
 declare(strict_types=1);
 
 namespace Units;
-use JWT;
+use Core\JWT;
+use Traits\Errors;
 
 /**
  * 
@@ -12,12 +13,16 @@ use JWT;
  */
 class User {
     protected ?array $results = [];
+    private object $jwt;
+    
+    use Errors;
     
     public function __construct() {
         $this->results = [
             "ok" => 1,
             "errors" => []
         ];
+        $this->jwt = new JWT();
     }
 
     protected function ValidateUsernameInput(string $username): void
@@ -74,8 +79,8 @@ class User {
     
     protected function TokenGenerate(array $payload): string
    {
-       $jwt = new JWT();
-       return $jwt->Encode($payload);
+       
+       return $this->jwt->Encode($payload);
    }
    
    protected function Success(): void
@@ -95,24 +100,40 @@ class User {
        die();
    }
     
-    rotected function IsLoggedIn(): void
+    protected function GetLogin(): array
     {
+        $results = [
+            "ok" => 0,
+            "data"=> []
+        ];
+        $headerToken = $this->GetTokenHeader();
+        $cookieToken = $this->GetTokenCookie();
         
+        if($headerToken === '' && $cookieToken === ''){
+            return $results;
+        }
+        
+        $token = $headerToken !== '' ? $headerToken : $cookieToken;
+        
+        $results["ok"] = 1;
+        $results["data"] = $this->jwt->Decode($token);
+        
+        return $results;
     }
     
-    protected function GetToken(): bool
+    protected function GetTokenHeader(): string
     {
-        
+        if(!preg_match("/^Bearer\s+(.*)$/", $_SERVER["HTTP_AUTHORIZATION"], $matches)){
+            return '';
+        }
+        return $matches[1];
     }
     
-    protected function CheckCookie(): bool
+    protected function GetTokenCookie(): string
     {
-        if (isset(isset($_COOKIE["token"]))
-    }
-
-
-    protected function ValidateToken(): bool
-    {
-        
+        if (isset($_COOKIE["Token"])){
+            return $_COOKIE["Token"];
+        }
+        return '';
     }
 }
