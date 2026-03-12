@@ -31,8 +31,9 @@ class UserSignup extends User
    
    public function Create(): void
    {
-       if($this->GetLogin()["ok"]){
-            header("Location: /user/isloggedin");
+     $loginStatus = $this->GetLogin();
+        if($loginStatus["ok"]){
+            $this->LoginRespond();
         }
       $this->CheckMethod();
       $this->CheckParams();
