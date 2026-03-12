@@ -64,9 +64,25 @@ class User {
         $this->showErrors();
     }
     
-    protected function showErrors(){
+    protected function showErrors(): void
+    {
        if(!$this->results["ok"]){
            $this->ValidationError($this->results["errors"]);
        }
+    }
+    
+    rotected function IsLoggedIn(): void
+    {
+        
+    }
+    
+    protected function CheckToken(): bool
+    {
+        
+    }
+    
+    protected function ValidateToken(): bool
+    {
+        
     }
 }
