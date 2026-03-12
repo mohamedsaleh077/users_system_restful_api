@@ -54,7 +54,7 @@ class JWT {
         $signature = hash_hmac(
                 "sha256",
                 $matches["header"] . "." . $matches["payload"],
-                $this->key,
+                self::KEY1,
                 true
         );
 
