@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 namespace Traits;
+use function header;
+
 /**
  * for All Validations and connection checks for API
  *
@@ -14,7 +16,16 @@ Trait APIHelper {
         if($method === "GET"){
             return $_GET;
         }
-        return json_decode(file_get_contents("php://input"), true);
+        
+        $content = file_get_contents("php://input");
+        if(!json_validate($content)){
+            http_response_code(415);
+            header("Content-Type: application/json; charset=utf-8");
+            echo json_encode(["ok"=>0, "message" => "Only JSON content is supported"]);
+            die();
+        }
+        
+        return json_decode($content, true);
     }
     
     public function isGET(): bool
