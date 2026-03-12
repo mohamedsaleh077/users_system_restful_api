@@ -41,7 +41,7 @@ class UserLogin extends User
         $this->ValidateInput();
         $this->CheckExistance();
         
-        if(password_verify($this->post["password"], 
+        if(!password_verify($this->post["password"], 
                            $this->userData["results"]["password_hash"])){
             $this->results["errors"]["password"][] = "Invalid Password.";
         }
