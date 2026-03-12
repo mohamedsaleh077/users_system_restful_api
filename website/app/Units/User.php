@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace Units;
+use JWT;
 
 /**
  * 
@@ -71,16 +72,45 @@ class User {
        }
     }
     
+    protected function TokenGenerate(array $payload): string
+   {
+       $jwt = new JWT();
+       return $jwt->Encode($payload);
+   }
+   
+   protected function Success(): void
+   {
+        $cookie_options = [
+            'expires' => time() + 3600,
+            'domain' => "",
+            'path' => '/',
+            'secure' => false,
+            'httponly' => true,
+            'samesite'=> 'Lax'
+        ];
+       setcookie("Token", $this->results["jwt_token"] , $cookie_options);
+       http_response_code(200);
+       header("Content-Type: application/json; charset=utf-8");
+       echo json_encode($this->results);
+       die();
+   }
+    
     rotected function IsLoggedIn(): void
     {
         
     }
     
-    protected function CheckToken(): bool
+    protected function GetToken(): bool
     {
         
     }
     
+    protected function CheckCookie(): bool
+    {
+        if (isset(isset($_COOKIE["token"]))
+    }
+
+
     protected function ValidateToken(): bool
     {
         
