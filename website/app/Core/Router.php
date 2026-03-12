@@ -72,8 +72,21 @@ class Router {
 //            $this->UnsupportedContent();
 //        }
         if($this->method === "POST"){
-            call_user_func_array([(new \Controllers\UserSignup()), "create"], []);
+            call_user_func_array([(new \Controllers\UserSignup()), "Create"], []);
         }
     }
     
+    
+    private function user_login() {
+        if($this->method === "GET"){
+            $routes = [
+              "POST : /user/login {(username_email:255) password:50}"  
+            ];
+            $this->viewer::RoutesView("User login", $routes);
+        }
+        
+        if($this->method === "POST"){
+            call_user_func_array([(new \Controllers\UserLogin()), "Login"], []);
+        }
+    }
 }
