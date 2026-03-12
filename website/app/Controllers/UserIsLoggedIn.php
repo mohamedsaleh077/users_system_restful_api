@@ -11,8 +11,6 @@ use Units\User;
 class UserIsLoggedIn extends User
 {
     public function Check(){
-        header("Content-Type: application/json; charset=utf-8");
-        echo json_encode($this->GetLogin());
-        die();
+        $this->LoginRespond();
     }
 }
