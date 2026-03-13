@@ -1,226 +1,99 @@
-# PHP RESTful Authentication API (JWT + Docker)
+# PHP Auth API
 
-A **secure, lightweight, and production-ready RESTful API** built with **Vanilla PHP 8.x**, implementing **JWT authentication**, **HttpOnly Cookies**, and a **custom MVC routing engine**.
+A vanilla PHP 8.x REST API for user authentication — JWT tokens, HttpOnly cookies, custom MVC router, and Docker-based deployment.
 
-This API provides a **complete user authentication system** including:
+## What It Does
 
-* User Registration
-* User Login
-* Session Validation
-* Secure JWT Authentication
+- User registration and login
+- Session validation
+- JWT-based authentication via `Authorization` header or secure `HttpOnly` cookie
+- Works with any frontend or mobile client
 
-It is designed to integrate easily with **modern frontends** such as:
+## Tech Stack
 
-* React
-* Vue
-* Angular
-* Next.js
-* Mobile apps (Flutter / React Native / Swift / Kotlin)
+| Layer          | Technology                      |
+|----------------|---------------------------------|
+| Backend        | PHP 8.x (strict types)         |
+| Database       | MySQL 8                        |
+| Auth           | JWT (JSON Web Tokens)          |
+| Infrastructure | Docker + Docker Compose        |
+| Security       | bcrypt, HttpOnly cookies, SameSite |
+| Architecture   | Custom MVC (OOP)               |
 
----
-
-# Overview
-
-This project acts as a **secure backend service** responsible for managing user accounts and authentication sessions.
-
-The system uses **JSON Web Tokens (JWT)** for identity verification and supports **two authentication methods simultaneously**:
-
-1. Authorization Header (`Bearer Token`)
-2. Secure HttpOnly Cookie (`Token`)
-
-This dual approach allows the API to work seamlessly with:
-
-* Web browsers
-* Mobile apps
-* Third-party clients
-
----
-
-# Tech Stack
-
-| Layer          | Technology                         |
-| -------------- | ---------------------------------- |
-| Backend        | PHP 8.x (Strict Types)             |
-| Database       | MySQL 8                            |
-| Authentication | JWT (JSON Web Tokens)              |
-| Infrastructure | Docker + Docker Compose            |
-| Security       | BCRYPT, HttpOnly Cookies, SameSite |
-| Architecture   | Custom MVC (OOP)                   |
-
----
-
-# Project Architecture
+## Project Structure
 
 ```
 .
-├── website
-│
-│   ├── app
-│   │
-│   │   ├── Controllers
-│   │   │   Handles incoming HTTP requests
-│   │
-│   │   ├── Core
-│   │   │   Framework engine (Router, App, JWT, View)
-│   │
-│   │   ├── Models
-│   │   │   Database interaction layer
-│   │
-│   │   ├── Units
-│   │   │   Business logic modules (User, Uploaders)
-│   │
-│   │   └── Traits
-│   │       Shared helpers (APIHelper, Errors)
-│
-│   └── public
-│       └── index.php
-│           Main application entry point
-│
-├── db
-│   Database schema initialization
-│
+├── website/
+│   ├── app/
+│   │   ├── Controllers/    # HTTP request handlers
+│   │   ├── Core/           # Router, App, JWT, View
+│   │   ├── Models/         # Database layer
+│   │   ├── Units/          # Business logic (User, Uploaders)
+│   │   └── Traits/         # Shared helpers (APIHelper, Errors)
+│   └── public/
+│       └── index.php       # Entry point
+├── db/                     # Schema initialization
 └── docker-compose.yml
-    Container orchestration
 ```
 
----
-
-# Request Flow
-
-Every request goes through the following pipeline:
+## Request Flow
 
 ```
-Client Request
-     ↓
-public/index.php
-     ↓
-Core\App
-     ↓
-Router
-     ↓
-Controller
-     ↓
-Unit / Model
-     ↓
-JSON Response
+Client → index.php → App → Router → Controller → Unit/Model → JSON Response
 ```
 
----
+## Routing
 
-# Routing System
-
-The API uses a **custom routing engine**.
-
-All requests are routed through:
-
-```
-public/index.php
-```
-
-The router parses the URL in this format:
+All requests pass through `public/index.php`. The URL is parsed as:
 
 ```
 /controller/action/parameters
 ```
 
-Example:
-
-```
-/user/login
-/user/signup
-/user/isloggedin
-```
-
-| Part       | Description                                     |
-| ---------- | ----------------------------------------------- |
-| Controller | Determines which controller handles the request |
-| Action     | Determines which method will run                |
-| Params     | Optional parameters                             |
-
----
-
-# Base URL
-
-When running with Docker:
-
-```
-http://localhost
-```
-
-Example endpoint:
-
-```
-http://localhost/user/signup
-```
-
----
-
-# Authentication System
-
-The API uses **JWT tokens** for authentication.
-
-Two authentication methods are supported:
-
----
-
-## 1. Authorization Header
-
-Recommended for:
-
-* Mobile Apps
-* External Clients
-* Postman / API testing
-
-Example:
-
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
-
----
-
-## 2. HttpOnly Secure Cookie
-
-Recommended for:
-
-* Web applications
-
-Cookie properties:
-
-| Property | Value                                |
-| -------- | ------------------------------------ |
-| HttpOnly | true                                 |
-| SameSite | Lax                                  |
-| Secure   | false (should be true in production) |
-
-This protects against:
-
-* XSS attacks
-* CSRF risks
-
----
-
-# API Endpoints
-
----
-
-# 1. Register User
-
-Creates a new user account.
-
-### Endpoint
+Examples:
 
 ```
 POST /user/signup
+POST /user/login
+POST /user/isloggedin
 ```
 
 ---
 
-### Request Body
+## Authentication
+
+The API supports two authentication methods simultaneously:
+
+### Bearer Token
+
+Send the JWT in the `Authorization` header. Best for mobile apps, external clients, and API testing tools.
 
 ```
-Content-Type: application/json
+Authorization: Bearer <jwt>
 ```
+
+### HttpOnly Cookie
+
+The server sets a `Token` cookie on login. Best for web applications.
+
+| Property | Value     |
+|----------|-----------|
+| HttpOnly | `true`    |
+| SameSite | `Lax`     |
+| Secure   | `false` (set to `true` in production) |
+
+This mitigates XSS and CSRF attacks.
+
+---
+
+## API Reference
+
+### `POST /user/signup`
+
+Create a new account.
+
+**Request:**
 
 ```json
 {
@@ -230,47 +103,31 @@ Content-Type: application/json
 }
 ```
 
----
+**Validation:**
 
-### Validation Rules
+| Field    | Rule                                  |
+|----------|---------------------------------------|
+| username | 3–50 chars, alphanumeric plus `._-`   |
+| email    | RFC-compliant format                  |
+| password | Minimum 6 characters                  |
 
-| Field    | Rule                                 |
-| -------- | ------------------------------------ |
-| username | 3–50 characters, letters/numbers/._- |
-| email    | RFC compliant email format           |
-| password | minimum 6 characters                 |
-
----
-
-### Success Response
-
-```
-200 OK
-```
+**Response** `200 OK`:
 
 ```json
 {
   "ok": 1,
   "errors": [],
-  "jwt_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "jwt_token": "eyJhbGciOi..."
 }
 ```
 
 ---
 
-# 2. Login User
+### `POST /user/login`
 
-Authenticates a user using **username OR email**.
+Authenticate with username or email.
 
-### Endpoint
-
-```
-POST /user/login
-```
-
----
-
-### Request Body
+**Request:**
 
 ```json
 {
@@ -279,25 +136,9 @@ POST /user/login
 }
 ```
 
-You can send either:
+The `username_email` field accepts either a username or an email address.
 
-```
-username_email = username
-```
-
-or
-
-```
-username_email = email
-```
-
----
-
-### Success Response
-
-```
-200 OK
-```
+**Response** `200 OK`:
 
 ```json
 {
@@ -307,51 +148,25 @@ username_email = email
     "username": "dev_user",
     "email": "user@example.com"
   },
-  "jwt_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "jwt_token": "eyJhbGciOi..."
 }
 ```
 
-Additionally the server sets a cookie:
+The server also sets:
 
 ```
-Set-Cookie: Token=<JWT>; HttpOnly; SameSite=Lax
-```
-
----
-
-# 3. Check Session
-
-Validates if the current user session is still active.
-
-Useful for:
-
-* SPA authentication check
-* Page reload verification
-* Session persistence
-
----
-
-### Endpoint
-
-```
-POST /user/isloggedin
+Set-Cookie: Token=<jwt>; HttpOnly; SameSite=Lax
 ```
 
 ---
 
-### Authentication
+### `POST /user/isloggedin`
 
-Either:
+Check if the current session is valid. Useful for SPA auth checks and page reloads.
 
-```
-Authorization: Bearer <JWT>
-```
+Provide either the `Authorization: Bearer <jwt>` header or the `Token` cookie.
 
-or the **Token cookie**.
-
----
-
-### Success Response
+**Response** `200 OK`:
 
 ```json
 {
@@ -366,30 +181,24 @@ or the **Token cookie**.
 
 ---
 
-# Error Handling
+## Error Format
 
-All API errors follow a **consistent response schema**.
-
-### Error Format
+All errors follow a consistent structure:
 
 ```json
 {
   "ok": 0,
   "message": "Error description",
   "errors": {
-    "field_name": [
-      "Specific error message"
-    ]
+    "field_name": ["Specific error message"]
   }
 }
 ```
 
----
-
-# HTTP Status Codes
+### Status Codes
 
 | Code | Meaning                |
-| ---- | ---------------------- |
+|------|------------------------|
 | 200  | Success                |
 | 400  | Bad Request            |
 | 401  | Unauthorized           |
@@ -399,35 +208,14 @@ All API errors follow a **consistent response schema**.
 
 ---
 
-# Security Features
+## Security
 
-### Password Security
+- **Passwords** — hashed with `password_hash()` (bcrypt) and verified with `password_verify()`
+- **Input validation** — regex filters, length checks, email format validation
+- **SQL injection** — all queries use prepared statements via a custom QueryBuilder
+- **URL sanitization** — the router strips malicious characters from incoming URLs
 
-Passwords are hashed using:
-
-```
-password_hash(PASSWORD_DEFAULT)
-```
-
-Which currently uses **BCRYPT**.
-
-Verification uses:
-
-```
-password_verify()
-```
-
----
-
-### Input Sanitization
-
-All user input is validated using:
-
-* Regex filters
-* Length checks
-* Email validation
-
-Example username regex:
+Username regex example:
 
 ```
 /^[a-zA-Z0-9._-]{3,50}$/
@@ -435,110 +223,55 @@ Example username regex:
 
 ---
 
-### SQL Injection Protection
+## Getting Started
 
-All queries are executed using **prepared statements** through a custom **QueryBuilder**.
+**1. Clone the repo:**
 
----
-
-### URL Sanitization
-
-The router sanitizes incoming URLs to prevent malicious characters.
-
----
-
-# API Helper Trait
-
-The `APIHelper` trait simplifies controller logic by automatically:
-
-* Validating HTTP method
-* Reading JSON body from `php://input`
-* Parsing JSON to associative arrays
-* Returning standardized responses
-
-Example usage:
-
-```php
-$this->post = $this->getJsonInput();
-```
-
----
-
-# Running the Project
-
-## Step 1 — Clone Repository
-
-```
+```bash
 git clone <repo-url>
+cd <project-dir>
 ```
 
----
+**2. Configure environment:**
 
-## Step 2 — Create Environment File
-
-Copy the example file:
-
-```
-website/.env.example
+```bash
+cp website/.env.example website/.env
 ```
 
-to:
+Edit `website/.env` with your database credentials.
 
-```
-website/.env
-```
+**3. Start the containers:**
 
-Then update database credentials.
-
----
-
-## Step 3 — Start Docker
-
-```
+```bash
 docker-compose up --build
 ```
 
----
+**4. Access:**
 
-## Step 4 — Access Services
+| Service    | URL                     |
+|------------|-------------------------|
+| API        | http://localhost        |
+| phpMyAdmin | http://localhost:8081   |
 
-| Service    | URL                                            |
-| ---------- | ---------------------------------------------- |
-| API        | [http://localhost](http://localhost)           |
-| phpMyAdmin | [http://localhost:8081](http://localhost:8081) |
+**5. Test it:**
 
----
-
-# Example API Test
-
-Using **curl**:
-
-```
+```bash
 curl -X POST http://localhost/user/signup \
--H "Content-Type: application/json" \
--d '{"username":"dev_user","email":"dev@mail.com","password":"securepass"}'
+  -H "Content-Type: application/json" \
+  -d '{"username":"dev_user","email":"dev@mail.com","password":"securepass"}'
 ```
 
 ---
 
-# Known Issue (Important)
+## Known Issue
 
-There is a **logic bug** in the login controller:
+There is a bug in the login controller — the password verification condition is inverted:
 
-Current code:
-
-```php
-if(password_verify($this->post["password"], $this->userData["results"]["password_hash"])){
-    $this->results["errors"]["password"][] = "Invalid Password.";
-}
+```diff
+- if(password_verify($this->post["password"], $this->userData["results"]["password_hash"])){
++ if(!password_verify($this->post["password"], $this->userData["results"]["password_hash"])){
+      $this->results["errors"]["password"][] = "Invalid Password.";
+  }
 ```
 
-Correct version:
-
-```php
-if(!password_verify($this->post["password"], $this->userData["results"]["password_hash"])){
-    $this->results["errors"]["password"][] = "Invalid Password.";
-}
-```
-
-Without this fix, **all login attempts will fail**.
+Without the `!` negation, every login attempt will fail. Fix this before using in production.
