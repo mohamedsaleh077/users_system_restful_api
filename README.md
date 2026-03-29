@@ -519,26 +519,4 @@ curl -X POST http://localhost/user/signup \
 -d '{"username":"dev_user","email":"dev@mail.com","password":"securepass"}'
 ```
 
----
-
-# Known Issue (Important)
-
-There is a **logic bug** in the login controller:
-
-Current code:
-
-```php
-if(password_verify($this->post["password"], $this->userData["results"]["password_hash"])){
-    $this->results["errors"]["password"][] = "Invalid Password.";
-}
-```
-
-Correct version:
-
-```php
-if(!password_verify($this->post["password"], $this->userData["results"]["password_hash"])){
-    $this->results["errors"]["password"][] = "Invalid Password.";
-}
-```
-
 Without this fix, **all login attempts will fail**.
