@@ -1,0 +1,20 @@
+{
+  "config": {
+    "platform": {
+      "php": "8.3.0"
+    }
+  },
+  "require": {
+    "mohamedsaleh077/lno": "dev-main"
+  },
+  "autoload": {
+    "psr-4": {
+      "Core\\": "Core/",
+      "Controllers\\": "Controllers/",
+      "Models\\": "Models/",
+      "Interfaces\\": "Interfaces/",
+      "Traits\\": "Traits/",
+      "Units\\": "Units/"
+    }
+  }
+}
