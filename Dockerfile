@@ -8,11 +8,11 @@ WORKDIR /sites/localhost/html/public
 RUN chown -R apache:apache /sites/localhost || true
 
 # composer commands
-COPY ./* ./
-WORKDIR /sites/localhost/html/public/app
-
-COPY app/composer.json ./
-RUN composer install
-RUN composer dump-autoload
+#COPY ./* ./
+#WORKDIR /sites/localhost/html/public/app
+#
+#COPY app/composer.json ./
+#RUN composer install
+#RUN composer dump-autoload
 
 EXPOSE 80 443
