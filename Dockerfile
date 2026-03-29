@@ -8,10 +8,10 @@ WORKDIR /sites/localhost/html/public
 RUN chown -R apache:apache /sites/localhost || true
 
 # composer commands
-COPY ./website/* .
+COPY ./* .
 WORKDIR /sites/localhost/html/public/app
 
-COPY ./website/app/composer.json .
+COPY ./app/composer.json .
 RUN composer install
 RUN composer dump-autoload
 
